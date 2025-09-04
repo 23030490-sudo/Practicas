@@ -48,27 +48,4 @@ public class Cuenta {
         }
     }
     //Tarea: diseñar los restantes
-    //Tarea: consultar saldo
-    public double consultarSaldo(){
-        return this.saldo;
-    }
-
-    //Método cambiar PIN
-    public boolean cambiarPin(String pinActual, String nuevoPin){
-        if(this.pin.equals(pinActual) && nuevoPin != null && !nuevoPin.isEmpty()){
-            this.pin = nuevoPin;
-            return true;
-        }
-        return false;
-    }
-
-    //Método ransferir a otra cuenta
-    public boolean transferir(Cuenta destino, double cantidad){
-        if(this.retirar(cantidad)){ // reutiliza el método retirar
-            destino.depositar(cantidad);
-            return true;
-        }
-        return false;
-    }
-
 }

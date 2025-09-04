@@ -50,15 +50,5 @@ public class CajeroModel {
         return cuentas.containsKey(numeroCuenta);
     }
     //Tarea: definir el método para transferir
-    public boolean transferir(String numeroCuentaDestino, double cantidad){
-        if(cuentaActual != null && cuentas.containsKey(numeroCuentaDestino) && cantidad > 0){
-            Cuenta destino = cuentas.get(numeroCuentaDestino);
-            if(cuentaActual.retirar(cantidad)){
-                destino.depositar(cantidad);
-                return true;
-            }
-        }
-        return false;
-    }
-
+    
 }
