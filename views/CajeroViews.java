@@ -1,82 +1,150 @@
 package views;
+
 import java.util.Scanner;
+
+/**
+ * Clase {@code CajeroViews} que gestiona la interacción con el usuario.
+ * Permite mostrar menús, solicitar datos de entrada y mostrar mensajes
+ * relacionados con las operaciones del cajero automático.
+ * 
+ * Forma parte de la capa de Vista (MVC).
+ * 
+ * @author TuNombre
+ */
 public class CajeroViews {
+
+    /** Objeto Scanner para la entrada de datos del usuario */
     private Scanner scanner;
-    public CajeroViews(){
+
+    /**
+     * Constructor de la clase que inicializa el {@code Scanner}.
+     */
+    public CajeroViews() {
         scanner = new Scanner(System.in);
     }
-    //Mostar bienvenida
-    public void mostrarBienvenida(){
+
+    /**
+     * Muestra un mensaje de bienvenida al usuario.
+     */
+    public void mostrarBienvenida() {
         System.out.println("=============================");
         System.out.println("¡Bienvenido Usuario!, AL BANCO MEXA");
         System.out.println("=============================");
     }
-    //Método solicitar Número de cuenta
-    public String solicitarNumeroCuenta(){
-        System.out.println("Ingresa tú número de cuenta: ");
+
+    /**
+     * Solicita al usuario que ingrese su número de cuenta.
+     * 
+     * @return Número de cuenta ingresado como cadena.
+     */
+    public String solicitarNumeroCuenta() {
+        System.out.println("Ingresa tu número de cuenta: ");
         return scanner.nextLine();
     }
-    //Método solicitar PIN
-    public String solicitarPin(){
-        System.out.println("Ingresa tú de PIN: ");
+
+    /**
+     * Solicita al usuario que ingrese su PIN.
+     * 
+     * @return PIN ingresado como cadena.
+     */
+    public String solicitarPin() {
+        System.out.println("Ingresa tu PIN: ");
         return scanner.nextLine();
     }
-    //Método para mostrar el Menú principal
-    public void mostrarMenuPrincipal(String titular){
+
+    /**
+     * Muestra el menú principal con las operaciones disponibles.
+     * 
+     * @param titular Nombre del titular de la cuenta.
+     */
+    public void mostrarMenuPrincipal(String titular) {
         System.out.println("=============================");
-        System.out.println("¡Bienvenid@ "+titular);
+        System.out.println("¡Bienvenid@ " + titular + "!");
         System.out.println("=============================");
         System.out.println("1.- Consultar saldo");
         System.out.println("2.- Retirar");
         System.out.println("3.- Depositar");
-        System.out.println("4.- Tranferir");
-        //TAREA: Definir las opciones faltantes
+        System.out.println("4.- Transferir");
+        // TAREA: Definir las opciones faltantes
         System.out.println("5.- Salir");
     }
-    //Método para leer la opción del menú
-    public int leerOpcion(){
-        try{
+
+    /**
+     * Lee la opción del menú seleccionada por el usuario.
+     * 
+     * @return Entero con la opción seleccionada, o -1 si hay error en la entrada.
+     */
+    public int leerOpcion() {
+        try {
             return Integer.parseInt(scanner.nextLine());
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
-    //Método mostrar saldo
-    public void mostrarSaldo(double saldo){
+
+    /**
+     * Muestra el saldo actual de la cuenta del usuario.
+     * 
+     * @param saldo Saldo de la cuenta.
+     */
+    public void mostrarSaldo(double saldo) {
         System.out.println("=============================");
-        System.out.println("Tú saldo actual es: "+saldo);
+        System.out.println("Tu saldo actual es: " + saldo);
         System.out.println("=============================");
     }
-    
-    public double solicitarCantida(String operacion){
-        System.out.println("Ingresa la cantidad a "+operacion+": ");
-        try{
+
+    /**
+     * Solicita al usuario que ingrese una cantidad para una operación
+     * (ejemplo: retirar o depositar).
+     * 
+     * @param operacion Nombre de la operación (ejemplo: "retirar", "depositar").
+     * @return Cantidad ingresada como {@code double}, o -1 si hubo error.
+     */
+    public double solicitarCantida(String operacion) {
+        System.out.println("Ingresa la cantidad a " + operacion + ": ");
+        try {
             return Double.parseDouble(scanner.nextLine());
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
-    //Método para mostrar mensajes
-    public void mostrarMensajes(String mensaje){
-        System.out.println("===== "+mensaje);
+
+    /**
+     * Muestra un mensaje genérico al usuario.
+     * 
+     * @param mensaje Mensaje a mostrar.
+     */
+    public void mostrarMensajes(String mensaje) {
+        System.out.println("===== " + mensaje);
     }
-    //Tarea: Personalizar mensajes de error y de éxito
-    public void mostrarError(String mensaje){
+
+    /**
+     * Muestra un mensaje de error personalizado.
+     * 
+     * @param mensaje Mensaje de error.
+     */
+    public void mostrarError(String mensaje) {
         System.out.println("❌ ERROR: " + mensaje);
     }
 
-    public void mostrarExito(String mensaje){
+    /**
+     * Muestra un mensaje de éxito personalizado.
+     * 
+     * @param mensaje Mensaje de éxito.
+     */
+    public void mostrarExito(String mensaje) {
         System.out.println("✅ ÉXITO: " + mensaje);
     }
 
-    //Tarea: Método para salir y cerrar el Scanner
-    public void cerrar(){
+    /**
+     * Cierra el {@code Scanner} y muestra un mensaje de despedida.
+     */
+    public void cerrar() {
         System.out.println("=============================");
         System.out.println("Gracias por usar BANCO MEXA. ¡Hasta pronto!");
         System.out.println("=============================");
-        if(scanner != null){
+        if (scanner != null) {
             scanner.close();
         }
     }
-
 }
