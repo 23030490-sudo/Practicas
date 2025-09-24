@@ -27,6 +27,10 @@ public class CajeroModel {
         inicializarCuentas();
     }
 
+    public void agregarCuenta(Cuenta cuenta) {
+        cuentas.put(cuenta.getNumeroCuenta(), cuenta);
+    }
+
     /**
      * Inicializa las cuentas con información predefinida.
      * Método de apoyo para el constructor.
