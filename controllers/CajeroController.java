@@ -2,18 +2,23 @@ package controllers;
 
 import models.CajeroModel;
 import views.CajeroViews;
+import strategies.*;
 
 /**
  * Controlador principal del sistema de cajero automático.
  * Se encarga de gestionar la interacción entre el modelo y la vista.
  * Implementa la lógica del flujo del cajero (autenticación, operaciones, menú).
  * 
- * @author 
+ * Aplicación del patrón Strategy para las operaciones.
+ * 
  */
 public class CajeroController {
     private CajeroModel model;
     private CajeroViews view;
     private boolean sistemaActivo;
+
+    // Estrategias disponibles
+    private OperacionStrategy[] estrategias;
 
     /**
      * Constructor de la clase CajeroController.
@@ -25,11 +30,19 @@ public class CajeroController {
         this.model = model;
         this.view = view;
         this.sistemaActivo = true;
+
+        // Se inicializan las estrategias en un arreglo
+        this.estrategias = new OperacionStrategy[] {
+            new ConsultarSaldoStrategy(model, view),
+            new RetirarStrategy(model, view),
+            new DepositarStrategy(model, view),
+            new TransferirStrategy(model, view),
+            new SalirStrategy(this, view)  // recibe el controlador porque modifica sistemaActivo
+        };
     }
 
     /**
      * Método principal que inicia el flujo del cajero.
-     * Se encarga de mostrar bienvenida, autenticar y desplegar el menú principal.
      */
     public void iniciarCajero() {
         view.mostrarBienvenida();
@@ -59,93 +72,25 @@ public class CajeroController {
      */
     private void ejecutarMenuPrincipal() {
         boolean sessionActiva = true;
-        while (sessionActiva) {
+        while (sessionActiva && sistemaActivo) {
             view.mostrarMenuPrincipal(model.getCuentaActual().getTitular());
             int opcion = view.leerOpcion();
-            switch (opcion) {
-                case 1:
-                    consultarSaldo();
-                    break;
-                case 2:
-                    retirarSaldo();
-                    break;
-                case 3:
-                    realizarDeposito();
-                    break;
-                case 4:
-                    transferir();
-                    break;
-                case 5:
-                    salir();
-                    sessionActiva = false; // Se sale de la sesión actual
-                    break;
-                default:
-                    view.mostrarMensajes("Opción no válida");
+            if (opcion >= 1 && opcion <= estrategias.length) {
+                estrategias[opcion - 1].ejecutar();
+                if (opcion == 5) { // opción salir
+                    sessionActiva = false;
+                }
+            } else {
+                view.mostrarMensajes("Opción no válida");
             }
         }
     }
 
     /**
-     * Consulta y muestra el saldo de la cuenta actual.
+     * Cambia el estado del sistema.
+     * Usado por la estrategia "Salir".
      */
-    public void consultarSaldo() {
-        double saldo = model.consultarSaldo();
-        view.mostrarSaldo(saldo);
-    }
-
-    /**
-     * Solicita una cantidad y realiza un depósito en la cuenta actual.
-     */
-    public void realizarDeposito() {
-        double cantidad = view.solicitarCantida("Depósito");
-        if (cantidad <= 0) {
-            view.mostrarMensajes("Error en la cantidad");
-            return;
-        }
-        if (model.realizarDeposito(cantidad)) {
-            view.mostrarMensajes("Depósito exitoso por la cantidad de: " + cantidad);
-        } else {
-            view.mostrarMensajes("Error al procesar el depósito");
-        }
-    }
-
-    /**
-     * Solicita una cantidad y realiza un retiro de la cuenta actual.
-     */
-    public void retirarSaldo() {
-        double cantidad = view.solicitarCantida("Retiro");
-        if (cantidad <= 0) {
-            view.mostrarMensajes("Error en la cantidad");
-            return;
-        }
-        if (model.realizarRetiro(cantidad)) {
-            view.mostrarMensajes("Retiro exitoso de " + cantidad);
-        } else {
-            view.mostrarMensajes("Fondos insuficientes");
-        }
-    }
-
-    /**
-     * Solicita datos y realiza una transferencia a otra cuenta.
-     */
-    public void transferir() {
-        double cantidad = view.solicitarCantida("Transferencia");
-        if (cantidad <= 0) {
-            view.mostrarMensajes("Error en la cantidad");
-            return;
-        }
-        if (model.transferir(view.solicitarNumeroCuenta(), cantidad)) {
-            view.mostrarMensajes("Transferencia exitosa de " + cantidad);
-        } else {
-            view.mostrarMensajes("Fondos insuficientes");
-        }
-    }
-
-    /**
-     * Finaliza la sesión del cajero.
-     */
-    public void salir() {
-        view.cerrar();
-        sistemaActivo = false;
+    public void desactivarSistema() {
+        this.sistemaActivo = false;
     }
 }
